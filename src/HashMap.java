@@ -164,17 +164,19 @@ public class HashMap<K, V> implements HashMapInterface<K, V> {
         while (curEntry != null && !curEntry.getKey().equals(key)
                 && (!looped || curIndex != index)) {
             if (firstRemoved == -1 && curEntry.isRemoved()) {
+                // Record first removed
                 firstRemoved = index;
             }
 
             if (++curIndex >= this.table.length) {
+                // Loop back around to the first of the table
                 curIndex = 0;
                 looped = true;
             }
 
             curEntry = this.table[curIndex];
         }
-        if (curEntry == null || curEntry.getKey().equals(key)) {
+        if (curEntry != null && curEntry.getKey().equals(key)) {
             return curIndex;
         } else {
             return (firstRemoved == -1 ? curIndex : firstRemoved);
